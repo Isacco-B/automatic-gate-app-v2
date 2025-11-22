@@ -1,4 +1,4 @@
-import { AlertDialogProvider, AuthProvider, useAuth } from '@/context';
+import { AlertDialogProvider, AuthProvider, MqttProvider, useAuth } from '@/context';
 import { NotificationProvider } from '@/context/NotificationContext';
 import '@/global.css';
 
@@ -19,12 +19,14 @@ export default function RootLayout() {
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
 
       <AuthProvider>
-        <AlertDialogProvider>
-          <NotificationProvider>
-            <RootNavigator />
-            <PortalHost />
-          </NotificationProvider>
-        </AlertDialogProvider>
+        <MqttProvider>
+          <AlertDialogProvider>
+            <NotificationProvider>
+              <RootNavigator />
+              <PortalHost />
+            </NotificationProvider>
+          </AlertDialogProvider>
+        </MqttProvider>
       </AuthProvider>
     </ThemeProvider>
   );
