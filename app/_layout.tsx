@@ -1,3 +1,4 @@
+import { AuthProvider, useAuth } from '@/context';
 import '@/global.css';
 
 import { NAV_THEME } from '@/lib/theme';
@@ -15,8 +16,26 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-      <Stack />
-      <PortalHost />
+      <AuthProvider>
+        <RootNavigator />
+        <PortalHost />
+      </AuthProvider>
     </ThemeProvider>
+  );
+}
+
+function RootNavigator() {
+  const { isAuthenticated } = useAuth();
+
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Protected guard={isAuthenticated}>
+        <Stack.Screen name="(app)" />
+      </Stack.Protected>
+
+      <Stack.Protected guard={!isAuthenticated}>
+        <Stack.Screen name="sign-in" />
+      </Stack.Protected>
+    </Stack>
   );
 }
