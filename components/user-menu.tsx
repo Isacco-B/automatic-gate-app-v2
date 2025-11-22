@@ -28,7 +28,7 @@ export function UserMenu() {
     showAlertDialog(
       'Sei sicuro di voler uscire?',
       "Una volta disconnesso, dovrai effettuare nuovamente l'accesso per continuare.",
-      () => console.log('Account eliminato!'),
+      () => logout(),
       'Conferma',
       'Annulla'
     );
