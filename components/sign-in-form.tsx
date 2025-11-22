@@ -1,8 +1,3 @@
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Text } from '@/components/ui/text';
 import { LoginType, useAuth } from '@/context';
 import { useState } from 'react';
 import {
@@ -12,6 +7,17 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+  Text,
+} from './ui';
 
 export default function SignInForm() {
   const { login } = useAuth();
@@ -59,10 +65,10 @@ export default function SignInForm() {
               <CardContent className="gap-6">
                 <View className="gap-6">
                   <View className="gap-1.5">
-                    <Label htmlFor="username">Nome utente</Label>
+                    <Label htmlFor="username">Username</Label>
                     <Input
                       id="username"
-                      placeholder="Inserisci il tuo nome utente"
+                      placeholder="Inserisci il tuo username"
                       value={formData.username}
                       onChangeText={handleChange('username')}
                       autoCapitalize="none"

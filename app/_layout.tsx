@@ -1,4 +1,5 @@
-import { AuthProvider, useAuth } from '@/context';
+import { AlertDialogProvider, AuthProvider, useAuth } from '@/context';
+import { NotificationProvider } from '@/context/NotificationContext';
 import '@/global.css';
 
 import { NAV_THEME } from '@/lib/theme';
@@ -16,9 +17,14 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+
       <AuthProvider>
-        <RootNavigator />
-        <PortalHost />
+        <AlertDialogProvider>
+          <NotificationProvider>
+            <RootNavigator />
+            <PortalHost />
+          </NotificationProvider>
+        </AlertDialogProvider>
       </AuthProvider>
     </ThemeProvider>
   );
