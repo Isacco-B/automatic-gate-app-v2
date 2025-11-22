@@ -5,5 +5,7 @@
   "bracketSameLine": true,
   "trailingComma": "es5",
   "plugins": ["prettier-plugin-tailwindcss"],
-  "tailwindFunctions": ["cva"]
+  "tailwindFunctions": ["cva", "cn"],
+  "tailwindAttributes": ["className"],
+  "proseWrap": "always"
 }

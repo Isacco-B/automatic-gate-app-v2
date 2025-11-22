@@ -1,94 +1,98 @@
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { Text } from '@/components/ui/text';
-import * as React from 'react';
-import { Pressable, type TextInput, View } from 'react-native';
+import { LoginType, useAuth } from '@/context';
+import { useState } from 'react';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  ScrollView,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 
-export function SignInForm() {
-  const passwordInputRef = React.useRef<TextInput>(null);
+export default function SignInForm() {
+  const { login } = useAuth();
 
-  function onEmailSubmitEditing() {
-    passwordInputRef.current?.focus();
+  const [formData, setFormData] = useState<LoginType>({
+    username: '',
+    password: '',
+  });
+
+  function handleChange(field: keyof LoginType) {
+    return (text: string) => {
+      setFormData((prevState) => ({
+        ...prevState,
+        [field]: text,
+      }));
+    };
   }
 
   function onSubmit() {
-    // TODO: Submit form and navigate to protected screen if successful
+    if (!isValid) return;
+    Keyboard.dismiss();
+    login(formData);
+    setFormData({ username: '', password: '' });
   }
 
+  const isValid = [formData.username.trim(), formData.password.trim()].every(Boolean);
+
   return (
-    <View className="gap-6">
-      <Card className="border-border/0 sm:border-border shadow-none sm:shadow-sm sm:shadow-black/5">
-        <CardHeader>
-          <CardTitle className="text-center text-xl sm:text-left">Sign in to your app</CardTitle>
-          <CardDescription className="text-center sm:text-left">
-            Welcome back! Please sign in to continue
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="gap-6">
-          <View className="gap-6">
-            <View className="gap-1.5">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                placeholder="m@example.com"
-                keyboardType="email-address"
-                autoComplete="email"
-                autoCapitalize="none"
-                onSubmitEditing={onEmailSubmitEditing}
-                returnKeyType="next"
-                submitBehavior="submit"
-              />
-            </View>
-            <View className="gap-1.5">
-              <View className="flex-row items-center">
-                <Label htmlFor="password">Password</Label>
-                <Button
-                  variant="link"
-                  size="sm"
-                  className="web:h-fit ml-auto h-4 px-1 py-0 sm:h-4"
-                  onPress={() => {
-                    // TODO: Navigate to forgot password screen
-                  }}>
-                  <Text className="font-normal leading-4">Forgot your password?</Text>
-                </Button>
-              </View>
-              <Input
-                ref={passwordInputRef}
-                id="password"
-                secureTextEntry
-                returnKeyType="send"
-                onSubmitEditing={onSubmit}
-              />
-            </View>
-            <Button className="w-full" onPress={onSubmit}>
-              <Text>Continue</Text>
-            </Button>
+    <KeyboardAvoidingView behavior={'height'} className="flex-1" keyboardVerticalOffset={0}>
+      <ScrollView
+        contentContainerClassName="flex-1"
+        keyboardShouldPersistTaps="handled"
+        bounces={false}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View className="flex-1 justify-center px-4">
+            <Card className="border-border/0 shadow-none sm:border-border sm:shadow-sm sm:shadow-black/5">
+              <CardHeader>
+                <CardTitle className="text-center text-xl sm:text-left">
+                  Accedi al tuo account
+                </CardTitle>
+                <CardDescription className="text-center sm:text-left">
+                  Inserisci le tue credenziali per continuare
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="gap-6">
+                <View className="gap-6">
+                  <View className="gap-1.5">
+                    <Label htmlFor="username">Nome utente</Label>
+                    <Input
+                      id="username"
+                      placeholder="Inserisci il tuo nome utente"
+                      value={formData.username}
+                      onChangeText={handleChange('username')}
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      returnKeyType="next"
+                    />
+                  </View>
+                  <View className="gap-1.5">
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      placeholder="*********"
+                      value={formData.password}
+                      onChangeText={handleChange('password')}
+                      secureTextEntry
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      returnKeyType="done"
+                      onSubmitEditing={onSubmit}
+                    />
+                  </View>
+                  <Button className="w-full" onPress={onSubmit} disabled={!isValid}>
+                    <Text>Continua</Text>
+                  </Button>
+                </View>
+              </CardContent>
+            </Card>
           </View>
-          <Text className="text-center text-sm">
-            Don&apos;t have an account?{' '}
-            <Pressable
-              onPress={() => {
-                // TODO: Navigate to sign up screen
-              }}>
-              <Text className="text-sm underline underline-offset-4">Sign up</Text>
-            </Pressable>
-          </Text>
-          <View className="flex-row items-center">
-            <Separator className="flex-1" />
-            <Text className="text-muted-foreground px-4 text-sm">or</Text>
-            <Separator className="flex-1" />
-          </View>
-        </CardContent>
-      </Card>
-    </View>
+        </TouchableWithoutFeedback>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }

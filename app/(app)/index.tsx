@@ -1,5 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
+import { Input } from '@/components/ui/input';
+import { UserMenu } from '@/components/user-menu';
 import { Stack } from 'expo-router';
 import { MoonStarIcon, SunIcon } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
@@ -16,7 +18,16 @@ export default function Screen() {
   return (
     <>
       <Stack.Screen options={SCREEN_OPTIONS} />
-      <View className="flex-1 items-center justify-center gap-8 p-4"></View>
+      <View className="flex-1 items-center justify-center gap-8 p-4">
+        <UserMenu />
+        <Input
+          id="username"
+          placeholder="Inserisci il tuo nome utente"
+          autoCapitalize="none"
+          autoCorrect={false}
+          returnKeyType="next"
+        />
+      </View>
     </>
   );
 }
