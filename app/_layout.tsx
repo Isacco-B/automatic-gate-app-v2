@@ -1,24 +1,38 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+import { AuthProvider, MqttProvider, useAuth } from "@/context";
+import { useMaterial3Theme } from "@pchmn/expo-material3-theme";
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { MD3LightTheme, PaperProvider } from "react-native-paper";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const { theme } = useMaterial3Theme({
+    sourceColor: "#33691e",
+    fallbackSourceColor: "#33691e",
+  });
+  return (
+    <PaperProvider theme={{ ...MD3LightTheme, colors: theme.light }}>
+      <StatusBar style="dark" animated />
+      <AuthProvider>
+        <MqttProvider>
+          <RootNavigator />
+        </MqttProvider>
+      </AuthProvider>
+    </PaperProvider>
+  );
+}
+
+function RootNavigator() {
+  const { isAuthenticated } = useAuth();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Protected guard={isAuthenticated}>
+        <Stack.Screen name="(app)" />
+      </Stack.Protected>
+
+      <Stack.Protected guard={!isAuthenticated}>
+        <Stack.Screen name="sign-in" />
+      </Stack.Protected>
+    </Stack>
   );
 }
