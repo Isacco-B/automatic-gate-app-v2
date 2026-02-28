@@ -42,7 +42,10 @@ export default function SignInScreen() {
   function onSubmit() {
     if (!isValid) return;
     Keyboard.dismiss();
-    login(formData);
+    login({
+      username: formData.username.trim(),
+      password: formData.password.trim(),
+    });
     setFormData({ username: "", password: "" });
   }
 
